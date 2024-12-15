@@ -1,36 +1,35 @@
 // DO NOT DELETE
 
 import './App.css'
-import React, { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { Header } from './Header'
+import { Description } from './Description'
+import { DogListContainer } from './DogListContainer'
 /**
  * @type {() => JSX.Element}
  */
 
-const header = ' Dog アプリ'
-
 export const App = () => {
-  const [dogImage, setDogImage] = useState('')
+  const [url, setUrl] = useState(
+    'https://images.dog.ceo/breeds/hound-english/n02089973_1132.jpg',
+  )
 
-  useEffect(() => {
-    const fetchDoGImage = async () => {
-      const response = await fetch('https://dog.ceo/api/breeds/image/random')
-      const data = await response.json()
-      setDogImage(data.message)
-    }
-    fetchDoGImage()
-  }, [])
+  const DogImageChange = () => {
+    fetch('https://dog.ceo/api/breeds/image/random')
+      .then(response => response.json())
+      .then(data => {
+        if (data && data.message) {
+          setUrl(data.message)
+        }
+      })
+      .catch(error => console.error('Error fetching dog image:', error))
+  }
 
   return (
-    <>
-      <header>
-        <div>
-          <h2>{header}</h2>
-        </div>
-      </header>
-      <div>
-        <p>犬の画像を表示するサイトです</p>
-        <img src={dogImage} alt="dog" />
-      </div>
-    </>
+    <div>
+      <Header />
+      {/* <Description url={url} DogImageChange={DogImageChange} /> */}
+      <DogListContainer />
+    </div>
   )
 }
